@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAMEVERSE</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Orbitron',sans-serif;
+}
+
+body{
+    background:#070b14;
+    color:white;
+    overflow-x:hidden;
+}
+
+body::before{
+    content:'';
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:
+    radial-gradient(circle at 20% 20%,#00ffae25,transparent 35%),
+    radial-gradient(circle at 80% 30%,#00c3ff25,transparent 35%),
+    radial-gradient(circle at 50% 80%,#ff006625,transparent 35%);
+    z-index:-1;
+}
+
+/* NAVBAR */
+
+nav{
+    position:fixed;
+    width:100%;
+    top:0;
+    padding:20px 8%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    backdrop-filter:blur(20px);
+    background:rgba(0,0,0,.4);
+    z-index:1000;
+}
+
+.logo{
+    font-size:2rem;
+    font-weight:800;
+    color:#00ffae;
+    text-shadow:0 0 15px #00ffae;
+}
+
+nav ul{
+    display:flex;
+    gap:30px;
+    list-style:none;
+}
+
+nav ul li a{
+    color:white;
+    text-decoration:none;
+    transition:.3s;
+}
+
+nav ul li a:hover{
+    color:#00ffae;
+}
+
+/* HERO */
+
+.hero{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:0 10%;
+    position:relative;
+}
+
+.hero-content h1{
+    font-size:5rem;
+    line-height:1.1;
+    text-transform:uppercase;
+}
+
+.hero-content h1 span{
+    color:#00ffae;
+    text-shadow:0 0 30px #00ffae;
+}
+
+.hero-content p{
+    margin-top:25px;
+    font-size:1.2rem;
+    color:#ccc;
+    max-width:800px;
+}
+
+.btn{
+    margin-top:40px;
+    display:inline-block;
+    padding:16px 40px;
+    text-decoration:none;
+    color:white;
+    border-radius:40px;
+    background:linear-gradient(45deg,#00ffae,#0099ff);
+    box-shadow:0 0 25px rgba(0,255,174,.6);
+    transition:.4s;
+}
+
+.btn:hover{
+    transform:translateY(-5px) scale(1.05);
+}
+
+/* FEATURED GAMES */
+
+.section-title{
+    text-align:center;
+    font-size:3rem;
+    margin-bottom:60px;
+}
+
+.games{
+    padding:120px 8%;
+}
+
+.game-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:30px;
+}
+
+.game-card{
+    position:relative;
+    height:420px;
+    overflow:hidden;
+    border-radius:25px;
+    cursor:pointer;
+    transition:.5s;
+}
+
+.game-card:hover{
+    transform:translateY(-12px);
+}
+
+.game-card img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.game-info{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    padding:25px;
+    backdrop-filter:blur(12px);
+    background:rgba(0,0,0,.5);
+}
+
+.game-info h3{
+    margin-bottom:10px;
+}
+
+/* STATS */
+
+.stats{
+    padding:100px 8%;
+}
+
+.stat-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+.stat{
+    padding:40px;
+    text-align:center;
+    border-radius:20px;
+    backdrop-filter:blur(18px);
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);
+}
+
+.stat h2{
+    font-size:3rem;
+    color:#00ffae;
+}
+
+.stat p{
+    margin-top:10px;
+    color:#bbb;
+}
+
+/* TOURNAMENT */
+
+.tournament{
+    padding:120px 8%;
+}
+
+.tournament-banner{
+    padding:70px;
+    border-radius:25px;
+    text-align:center;
+    background:
+    linear-gradient(
+    135deg,
+    rgba(0,255,174,.2),
+    rgba(0,110,255,.2)
+    );
+    border:1px solid rgba(255,255,255,.1);
+}
+
+.tournament-banner h2{
+    font-size:3rem;
+    margin-bottom:20px;
+}
+
+.tournament-banner p{
+    color:#ccc;
+}
+
+/* FOOTER */
+
+footer{
+    padding:40px;
+    text-align:center;
+    color:#888;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+.hero-content h1{
+    font-size:3rem;
+}
+
+.section-title{
+    font-size:2rem;
+}
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+<div class="logo">GAMEVERSE</div>
+
+<ul>
+<li><a href="#">Home</a></li>
+<li><a href="#">Games</a></li>
+<li><a href="#">Esports</a></li>
+<li><a href="#">Community</a></li>
+<li><a href="#">Store</a></li>
+</ul>
+</nav>
+
+<section class="hero">
+<div class="hero-content">
+<h1>PLAY THE <span>FUTURE</span> OF GAMING</h1>
+
+<p>
+Experience next-generation multiplayer battles,
+competitive esports tournaments, immersive worlds,
+and elite gaming experiences built for champions.
+</p>
+
+<a href="#" class="btn">Play Now</a>
+</div>
+</section>
+
+<section class="games">
+
+<h2 class="section-title">Featured Games</h2>
+
+<div class="game-grid">
+
+<div class="game-card">
+<img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200" alt="">
+<div class="game-info">
+<h3>Cyber Strike</h3>
+<p>Competitive futuristic FPS.</p>
+</div>
+</div>
+
+<div class="game-card">
+<img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1200" alt="">
+<div class="game-info">
+<h3>Legends Arena</h3>
+<p>Battle royale championship.</p>
+</div>
+</div>
+
+<div class="game-card">
+<img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=1200" alt="">
+<div class="game-info">
+<h3>Speed Masters</h3>
+<p>Ultimate racing experience.</p>
+</div>
+</div>
+
+</div>
+
+</section>
+
+<section class="stats">
+
+<div class="stat-grid">
+
+<div class="stat">
+<h2>25M+</h2>
+<p>Registered Players</p>
+</div>
+
+<div class="stat">
+<h2>750K+</h2>
+<p>Daily Matches</p>
+</div>
+
+<div class="stat">
+<h2>95+</h2>
+<p>Global Servers</p>
+</div>
+
+<div class="stat">
+<h2>$10M</h2>
+<p>Esports Prize Pool</p>
+</div>
+
+</div>
+
+</section>
+
+<section class="tournament">
+
+<div class="tournament-banner">
+<h2>WORLD ESPORTS CHAMPIONSHIP 2026</h2>
+
+<p>
+Join the biggest gaming competition of the year and
+compete against top players for glory, rewards, and
+international recognition.
+</p>
+
+<a href="#" class="btn">Register Now</a>
+
+</div>
+
+</section>
+
+<footer>
+© 2026 GAMEVERSE. All Rights Reserved.
+</footer>
+
+</body>
+</html>
