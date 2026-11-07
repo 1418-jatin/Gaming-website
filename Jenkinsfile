@@ -1,12 +1,11 @@
 pipeline {
-    agent { label 'linux agent' }          // keep your agent's label
+    agent { label 'slave-agent1' }
 
     environment {
         IMAGE_NAME  = "19901418/prt-oct-25th"
         IMAGE_TAG   = "${BUILD_NUMBER}"
         APP_NAME    = "gaming-website"
         K8S_NODE_IP = "172.31.29.248"
-        NODE_PORT   = "30080"
     }
 
     options {
@@ -21,9 +20,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh '''
-                  docker build -t $IMAGE_NAME:$IMAGE_TAG -t $IMAGE_NAME:latest .
-                '''
+                sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG -t $IMAGE_NAME:latest .'
             }
         }
 
@@ -42,27 +39,33 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
+        stage('Deploy to Minikube') {
             steps {
-                withCredentials([file(credentialsId: 'ubuntu-cred', variable: 'KUBECONFIG')]) {
-                    sh '''
-                      kubectl get nodes
-                      sed "s|IMAGE_PLACEHOLDER|$IMAGE_NAME:$IMAGE_TAG|g" k8s/deployment.yaml | kubectl apply -f -
-                      kubectl apply -f k8s/service.yaml
-                      kubectl rollout status deployment/$APP_NAME --timeout=120s || {
-                        echo "Rollout failed - rolling back"
-                        kubectl rollout undo deployment/$APP_NAME
-                        exit 1
-                      }
-                      kubectl get pods,svc -l app=$APP_NAME -o wide
-                    '''
-                }
+                sh '''
+                  SSH="ssh -o StrictHostKeyChecking=accept-new -o BatchMode=yes ubuntu@$K8S_NODE_IP"
+
+                  $SSH "kubectl get nodes" < /dev/null
+
+                  sed "s|IMAGE_PLACEHOLDER|$IMAGE_NAME:$IMAGE_TAG|g" k8s/deployment.yaml | $SSH "kubectl apply -f -"
+                  $SSH "kubectl apply -f -" < k8s/service.yaml
+
+                  $SSH "kubectl rollout status deployment/$APP_NAME --timeout=120s" < /dev/null || {
+                    echo "Rollout failed - rolling back"
+                    $SSH "kubectl rollout undo deployment/$APP_NAME" < /dev/null
+                    exit 1
+                  }
+
+                  $SSH "kubectl get pods,svc -l app=$APP_NAME -o wide" < /dev/null
+                '''
             }
         }
 
         stage('Smoke Test') {
             steps {
-                sh 'curl -fsS --retry 5 --retry-delay 3 http://$K8S_NODE_IP:$NODE_PORT > /dev/null'
+                sh '''
+                  ssh -o BatchMode=yes ubuntu@$K8S_NODE_IP \
+                    'curl -fsS --retry 5 --retry-delay 3 http://$(minikube ip):30080 > /dev/null' < /dev/null
+                '''
             }
         }
     }
