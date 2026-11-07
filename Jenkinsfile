@@ -46,8 +46,8 @@ pipeline {
 
                   $SSH "kubectl get nodes" < /dev/null
 
-                  sed "s|IMAGE_PLACEHOLDER|$IMAGE_NAME:$IMAGE_TAG|g" k8s/deployment.yaml | $SSH "kubectl apply -f -"
-                  $SSH "kubectl apply -f -" < k8s/service.yaml
+                  sed "s|IMAGE_PLACEHOLDER|$IMAGE_NAME:$IMAGE_TAG|g" k8s/deployment.yml | $SSH "kubectl apply -f -"
+                  $SSH "kubectl apply -f -" < k8s/service.yml
 
                   $SSH "kubectl rollout status deployment/$APP_NAME --timeout=120s" < /dev/null || {
                     echo "Rollout failed - rolling back"
