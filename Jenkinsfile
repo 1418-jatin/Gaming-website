@@ -1,10 +1,12 @@
 pipeline {
-    agent { label 'linux agent' }
+    agent { label 'ec2-agent' }          // keep your agent's label
 
     environment {
-        IMAGE_NAME = "19901418/prt-oct-25th"
-        IMAGE_TAG  = "${BUILD_NUMBER}"
-        CONTAINER  = "gaming-website"
+        IMAGE_NAME  = "19901418/prt-oct-25th"
+        IMAGE_TAG   = "${BUILD_NUMBER}"
+        APP_NAME    = "gaming-website"
+        K8S_NODE_IP = "172.31.29.248"
+        NODE_PORT   = "30080"
     }
 
     options {
@@ -40,20 +42,27 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy to Kubernetes') {
             steps {
-                sh '''
-                  docker stop $CONTAINER || true
-                  docker rm $CONTAINER || true
-                  docker run -d --name $CONTAINER -p 80:80 \
-                    --restart unless-stopped $IMAGE_NAME:$IMAGE_TAG
-                '''
+                withCredentials([file(credentialsId: 'kubeconfig-cred', variable: 'KUBECONFIG')]) {
+                    sh '''
+                      kubectl get nodes
+                      sed "s|IMAGE_PLACEHOLDER|$IMAGE_NAME:$IMAGE_TAG|g" k8s/deployment.yaml | kubectl apply -f -
+                      kubectl apply -f k8s/service.yaml
+                      kubectl rollout status deployment/$APP_NAME --timeout=120s || {
+                        echo "Rollout failed - rolling back"
+                        kubectl rollout undo deployment/$APP_NAME
+                        exit 1
+                      }
+                      kubectl get pods,svc -l app=$APP_NAME -o wide
+                    '''
+                }
             }
         }
 
         stage('Smoke Test') {
             steps {
-                sh 'sleep 5 && curl -fsS http://localhost:80 > /dev/null'
+                sh 'curl -fsS --retry 5 --retry-delay 3 http://$K8S_NODE_IP:$NODE_PORT > /dev/null'
             }
         }
     }
