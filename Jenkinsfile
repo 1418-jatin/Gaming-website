@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "YOUR_DOCKERHUB_USERNAME/gaming-website"
+        IMAGE_NAME = "19901418/prt-oct-25th"
         IMAGE_TAG  = "${BUILD_NUMBER}"
     }
 
