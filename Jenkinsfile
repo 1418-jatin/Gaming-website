@@ -44,7 +44,7 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                withCredentials([file(credentialsId: 'kubeconfig-cred', variable: 'KUBECONFIG')]) {
+                withCredentials([file(credentialsId: 'ubuntu-cred', variable: 'KUBECONFIG')]) {
                     sh '''
                       kubectl get nodes
                       sed "s|IMAGE_PLACEHOLDER|$IMAGE_NAME:$IMAGE_TAG|g" k8s/deployment.yaml | kubectl apply -f -
