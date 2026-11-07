@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'ec2-agent' }          // keep your agent's label
+    agent { label 'linux agent' }          // keep your agent's label
 
     environment {
         IMAGE_NAME  = "19901418/prt-oct-25th"
